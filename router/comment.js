@@ -5,7 +5,7 @@ let router = express.Router()
 
 router.post('/',(req,res) =>{
     let {user:user,articleId:articleId,commentId:commentId,content:content} = req.body
-    db.query(`INSERT INTO user_comment (id,user,articleId,commentId,content,isShow_res,isShow,isParent) VALUES (0,'${user}','${articleId}','${commentId}','${content}',0,0,0)`,(err,data) =>{
+    db.query(`INSERT INTO user_comment (id,user,articleId,commentId,content,isShow_res,isShow,isParent,thumbs) VALUES (0,'${user}','${articleId}','${commentId}','${content}',0,0,0,0)`,(err,data) =>{
         if(err){
             res.json({msg:'error',code:0})
         }else{
@@ -42,7 +42,7 @@ router.post('/getData_2',(req,res) =>{
 })
 router.post('/response',(req,res) =>{
     let {user:user,articleId:articleId,commentId:commentId,belongComment:belongComment,belongId:belongId,belongUser:belongUser,content:content} = req.body
-    db.query(`INSERT INTO user_comment (id,user,articleId,commentId,belongComment,belongId,belongUser,content,isShow_res,isShow,isParent) VALUES (0,'${user}','${articleId}','${commentId}','${belongComment}','${belongId}','${belongUser}','${content}',0,0,0)`,(err,data) =>{
+    db.query(`INSERT INTO user_comment (id,user,articleId,commentId,belongComment,belongId,belongUser,content,isShow_res,isShow,isParent,thumbs) VALUES (0,'${user}','${articleId}','${commentId}','${belongComment}','${belongId}','${belongUser}','${content}',0,0,0,0)`,(err,data) =>{
         if(err){
             res.json({msg:'error',code:0})
         }else{

@@ -5,7 +5,7 @@ const md5_2 = require('../secret/md5')
 
 let router = express.Router()
 let corsOptions = {
-    origin: 'http://localhost:8080',
+    origin: 'http://47.104.216.90',
     credentials: true,
   }
 router.use(cors(corsOptions))
@@ -18,7 +18,7 @@ router.post('/',(req,res) => {
         }else if(data.length != 0){
             res.json({msg:'exist user please login',code:0,err:'user'})
         }else{
-            db.query(`INSERT INTO user_table (id,sessionid,user,pass) VALUES (0,null,'${name}','${md5_2(pass)}')`,(err,data) =>{
+            db.query(`INSERT INTO user_table (id,sessionid,user,pass,thumbsList,agreeList,disagreeList) VALUES (0,null,'${name}','${md5_2(pass)}',0,0,0)`,(err,data) =>{
                 if(err){
                     res.json({msg:'fail',code:0})
                 }else{

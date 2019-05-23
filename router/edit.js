@@ -49,7 +49,7 @@ router.post('/',(req,res) => {
     })
 })
 router.post('/insertArticle',(req,res) =>{
-    db.query(`INSERT INTO user_article (id,drafid,user,article,title,time,type) VALUES (0,'${req.body.drafid}','${req.body.user}','${req.body.article}','${req.body.title}',${req.body.time},${req.body.type})`,(err,data) => {
+    db.query(`INSERT INTO user_article (id,drafid,user,article,title,time,type,agreeList,disagreeList) VALUES (0,'${req.body.drafid}','${req.body.user}','${req.body.article}','${req.body.title}',${req.body.time},${req.body.type},0,0)`,(err,data) => {
         if(err){
             res.json({msg:'insert error',code:0})
         }else{
