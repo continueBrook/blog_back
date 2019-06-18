@@ -1,10 +1,12 @@
 const express = require('express')
 const db = require('../libs/db')
+const url = require('url')
 
 let router = express.Router()
 
-router.post('/',(req,res) =>{
-    db.query(`SELECT * FROM user_article`,(err,data) => {
+router.get('/',(req,res) =>{
+    let {start:start,end:end} = url.parse(req.url,true).query
+    db.query(`SELECT * FROM user_article limit ${start},${end}`,(err,data) => {
         if(err){
             res.json({msg:'error',code:0})
         }else{
