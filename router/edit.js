@@ -3,52 +3,66 @@ const db = require('../libs/db')
 const multer = require('multer')
 const fs = require('fs')
 const url = require('url')
-const qiniu = require('qiniu')
-const accessKey = 'x2wvg_1cuqIUtyYqiJiLQK_bEMEdkOVSEadb2kvo'
-const secretKey = '33DTRVgOBB_Y2xCs8kjjXV_kSlsI2zXQldVmsBx_'
-const mac = new qiniu.auth.digest.Mac(accessKey, secretKey);
-const options = {
-    scope: 'brook',
-    expires: 7200
-};
-const putPolicy = new qiniu.rs.PutPolicy(options);
-const uploadToken=putPolicy.uploadToken(mac);
+// const qiniu = require('qiniu')
+// const accessKey = 'x2wvg_1cuqIUtyYqiJiLQK_bEMEdkOVSEadb2kvo'
+// const secretKey = '33DTRVgOBB_Y2xCs8kjjXV_kSlsI2zXQldVmsBx_'
+// const mac = new qiniu.auth.digest.Mac(accessKey, secretKey);
+// const options = {
+//     scope: 'brook',
+//     expires: 7200
+// };
+// const putPolicy = new qiniu.rs.PutPolicy(options);
+// const uploadToken=putPolicy.uploadToken(mac);
 
 let router = express.Router()
 let multerObj = multer({dest:'./picture'})
 router.use(multerObj.any())
 
+router.get('/getFile',(req,res) =>{
+    let {fileUrl} = url.parse(req.url,true).query
+    let rs = fs.createReadStream(`./picture/${fileUrl}`)
+    rs.pipe(res)
+})
 router.post('/',(req,res) => {
-    var localFile = `./picture/${req.files[0].filename}`
-    var formUploader = new qiniu.form_up.FormUploader()
-    var putExtra = new qiniu.form_up.PutExtra();
-    var key=null;
-    // 文件上传
-    formUploader.putFile(uploadToken, key, localFile, putExtra, function(respErr,
-    respBody, respInfo) {
-    if (respErr) {
-        throw respErr;
-    }
-    if (respInfo.statusCode == 200) {
-        console.log(respBody);
-        res.json({
-            "errno": 0,
-            "data": [
-                `http://prj9sogrn.bkt.clouddn.com/${respBody.hash}`
-            ]
-        })
-    } else {
-        console.log(respInfo.statusCode);
-        console.log(respBody);
-    }
-    });
-    fs.unlink(`./picture/${req.files[0].filename}`,(err) =>{
-        if(err){
-            console.log('失败了')
-        }
+    res.json({
+        "errno": 0,
+        "data": [
+            `http://47.104.216.90:3000/edit/getFile?fileUrl=${req.files[0].filename}`
+        ]
     })
+    // var readableStream  = fs.createReadStream(`./picture/${req.files[0].filename}`)
+    // var config = new qiniu.conf.Config();
+    // config.zone = qiniu.zone.Zone_z1;
+    // var formUploader = new qiniu.form_up.FormUploader(config)
+    // var putExtra = new qiniu.form_up.PutExtra();
+    // var key=null;
+    // 文件上传
+    // formUploader.putStream(uploadToken, key, readableStream, putExtra, function(respErr,
+    // respBody, respInfo) {
+    // if (respErr) {
+    //     throw respErr;
+    // }
+    // if (respInfo.statusCode == 200) {
+    //     console.log(respBody);
+    //     res.json({
+    //         "errno": 0,
+    //         "data": [
+    //             `http://prj9sogrn.bkt.clouddn.com/${respBody.hash}`
+    //         ]
+    //     })
+    // } else {
+    //     console.log(respInfo.statusCode);
+    //     console.log(respBody);
+    // }
+    // });
+    // fs.unlink(`./picture/${req.files[0].filename}`,(err) =>{
+    //     if(err){
+    //         console.log('失败了')
+    //     }
+    // })
 })
 router.post('/insertArticle',(req,res) =>{
+    console.log(req.body)
     db.query(`INSERT INTO user_article (id,drafid,user,article,title,time,type,agreeList,disagreeList) VALUES (0,'${req.body.drafid}','${req.body.user}','${req.body.article}','${req.body.title}',${req.body.time},${req.body.type},0,0)`,(err,data) => {
         if(err){
             res.json({msg:'insert error',code:0})
