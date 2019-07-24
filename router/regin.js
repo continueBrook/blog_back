@@ -5,7 +5,7 @@ const md5_2 = require('../secret/md5')
 
 let router = express.Router()
 let corsOptions = {
-    origin: 'http://47.104.216.90',
+    origin: 'http://localhost:8080',
     credentials: true,
   }
 router.use(cors(corsOptions))

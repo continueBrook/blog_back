@@ -9,7 +9,7 @@ const md5_2 = require('../secret/md5')
 
 let router = express.Router()
 var corsOptions = {
-    origin: 'http://47.104.216.90',
+    origin: 'http://localhost:8080',
     credentials: true,
   }
 router.use(cors(corsOptions))
@@ -25,6 +25,7 @@ router.use(sessionParser({
 
 router.post('/',(req,res) => {
     let {name:name,pass:pass} = req.body
+    console.log(req.session)
     db.query(`SELECT * FROM user_table WHERE sessionid = '${req.sessionID}'`,(err,data) =>{
         if(err){
             res.json({msg:'login_session err',code:0})
@@ -35,10 +36,15 @@ router.post('/',(req,res) => {
                 }else if(data.length == 0){
                     res.json({msg:'login no user',code:0,err:'user'})
                 }else if(data[0].pass != md5_2(pass)){
-                    res.json({msg:'login pass or user is not correct',code:0,err:'pass'})
+                    res.json({msg:'pass is not correct',code:0,err:'pass'})
                 }else{
-                    db.query(`UPDATE user_table SET sessionid = '${req.sessionID}' WHERE user = '${name}'`)
-                    res.json({msg:'login success',name:name,code:1,timeStamp:new Date().getTime(),time:time})
+                    db.query(`UPDATE user_table SET sessionid = '${req.sessionID}' WHERE user = '${name}'`,err =>{
+                        if(err){
+                            res.json({msg:'err'})
+                        }else{
+                            res.json({msg:'login success',name:name,code:1,timeStamp:new Date().getTime(),time:time})
+                        }
+                    })
                 }
             })
         }else{

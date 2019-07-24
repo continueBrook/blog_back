@@ -36,7 +36,6 @@ router.post('/agree',(req,res) =>{
     })
 })
 router.post('/agreeToggle',(req,res) =>{
-    let {drafid:drafid,user:user} = req.body
     db.query(`UPDATE user_article SET agreeList = agreeList - 1 WHERE drafid = '${req.params.id}'`,err =>{
         if(err){
             res.json({msg:'error',code:0})
@@ -68,7 +67,6 @@ router.post('/disagree',(req,res) =>{
     })
 })
 router.post('/disagreeToggle',(req,res) =>{
-    let {drafid:drafid,user:user} = req.body
     db.query(`UPDATE user_article SET disagreeList = disagreeList - 1 WHERE drafid = '${req.params.id}'`,err =>{
         if(err){
             res.json({msg:'error',code:0})

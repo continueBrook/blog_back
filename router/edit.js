@@ -27,7 +27,7 @@ router.post('/',(req,res) => {
     res.json({
         "errno": 0,
         "data": [
-            `http://47.104.216.90:3000/edit/getFile?fileUrl=${req.files[0].filename}`
+            `http://localhost:3000/edit/getFile?fileUrl=${req.files[0].filename}`
         ]
     })
     // var readableStream  = fs.createReadStream(`./picture/${req.files[0].filename}`)
