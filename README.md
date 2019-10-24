@@ -1,2 +1,2 @@
 # blog_back
-node Blog
+my node Blog
