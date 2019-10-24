@@ -1,2 +1,2 @@
 # blog_back
-11 node Blog
+node Blog
